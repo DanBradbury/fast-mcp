@@ -140,7 +140,7 @@ module FastMcp
   # @yield [server] A block to configure the server
   # @yieldparam server [FastMcp::Server] The server to configure
   # @return [#call] The Rack middleware
-  def self.mount_in_rails(app, options = {})
+  def self.mount_in_rails(app, options = {}, &block)
     # Default options
     puts "OPTIONS: #{options}"
 
@@ -162,7 +162,7 @@ module FastMcp
       #setup_streamable_rails_transport(app, options.merge(name: name, version: version, logger: logger), transport_type)
     #end
 
-    do_it(app, options, block_given?)
+    do_it(app, options, &block)
   end
 
   def self.do_it(app, options, block_g)
