@@ -148,6 +148,11 @@ module FastMcp
     logger = options[:logger] || Rails.logger
     transport_type = options.delete(:transport) || detect_transport_type(options)
     puts "TRANSPORT TYPE: #{transport_type}"
+    if transport_type == :legacy
+      puts "transport type"
+      warn_rails_legacy_usage
+    end
+
 
     # Handle transport-specific options
     #if transport_type == :legacy
