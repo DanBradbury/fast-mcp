@@ -148,11 +148,34 @@ module FastMcp
     transport_type = options.delete(:transport) || detect_transport_type(options)
 
     # Handle transport-specific options
-    if transport_type == :legacy
-      setup_legacy_rails_transport(app, options.merge(name: name, version: version, logger: logger))
-    else
-      setup_streamable_rails_transport(app, options.merge(name: name, version: version, logger: logger), transport_type)
-    end
+    #if transport_type == :legacy
+      #setup_legacy_rails_transport(app, options.merge(name: name, version: version, logger: logger))
+    #else
+      #setup_streamable_rails_transport(app, options.merge(name: name, version: version, logger: logger), transport_type)
+    #end
+    path_prefix = options.delete(:path_prefix) || '/mcp'
+    messages_route = options.delete(:messages_route) || 'messages'
+    sse_route = options.delete(:sse_route) || 'sse'
+    authenticate = options.delete(:authenticate) || false
+    allowed_origins = options[:allowed_origins] || default_rails_allowed_origins(app)
+    allowed_ips = options[:allowed_ips] || FastMcp::Transports::RackTransport::DEFAULT_ALLOWED_IPS
+    # Create or get the server
+    self.server = FastMcp::Server.new(name: name, version: version, logger: logger)
+    yield self.server if block_given?
+
+    # Choose the right middleware based on authentication
+    self.server.transport_klass = if authenticate
+                                    FastMcp::Transports::AuthenticatedRackTransport
+                                  else
+                                    FastMcp::Transports::RackTransport
+                                  end
+
+    # Insert the middleware in the Rails middleware stack
+    app.middleware.use(
+      self.server.transport_klass,
+      self.server,
+      options.merge(path_prefix: path_prefix, messages_route: messages_route, sse_route: sse_route)
+    )
   end
 
   def self.detect_transport_type(options)
@@ -236,6 +259,7 @@ module FastMcp
   end
 
   def self.warn_rails_legacy_usage
+    puts "zzz"
     Rails.logger.warn('DEPRECATION WARNING: Legacy MCP transport detected in mount_in_rails.')
     Rails.logger.warn('Please migrate to StreamableHTTP transport for MCP 2025-06-18 compliance.')
     Rails.logger.warn('See migration guide: https://github.com/yjacquin/fast-mcp/blob/main/docs/migration_guide.md')
