@@ -143,6 +143,29 @@ module FastMcp
   def self.mount_in_rails(app, options = {})
     # Default options
     puts "OPTIONS: #{options}"
+
+    #name = options.delete(:name) || app.class.module_parent_name.underscore.dasherize
+    #version = options.delete(:version) || '1.0.0'
+    #logger = options[:logger] || Rails.logger
+    #transport_type = options.delete(:transport) || detect_transport_type(options)
+    #puts "TRANSPORT TYPE: #{transport_type}"
+    #if transport_type == :legacy
+      #puts "transport type"
+      #warn_rails_legacy_usage
+    #end
+
+
+    # Handle transport-specific options
+    #if transport_type == :legacy
+      #setup_legacy_rails_transport(app, options.merge(name: name, version: version, logger: logger))
+    #else
+      #setup_streamable_rails_transport(app, options.merge(name: name, version: version, logger: logger), transport_type)
+    #end
+
+    do_it(app, options)
+  end
+
+  def self.do_it(app, options)
     name = options.delete(:name) || app.class.module_parent_name.underscore.dasherize
     version = options.delete(:version) || '1.0.0'
     logger = options[:logger] || Rails.logger
@@ -152,14 +175,6 @@ module FastMcp
       puts "transport type"
       warn_rails_legacy_usage
     end
-
-
-    # Handle transport-specific options
-    #if transport_type == :legacy
-      #setup_legacy_rails_transport(app, options.merge(name: name, version: version, logger: logger))
-    #else
-      #setup_streamable_rails_transport(app, options.merge(name: name, version: version, logger: logger), transport_type)
-    #end
     path_prefix = options.delete(:path_prefix) || '/mcp'
     messages_route = options.delete(:messages_route) || 'messages'
     sse_route = options.delete(:sse_route) || 'sse'
@@ -183,6 +198,7 @@ module FastMcp
       self.server,
       options.merge(path_prefix: path_prefix, messages_route: messages_route, sse_route: sse_route)
     )
+
   end
 
   def self.detect_transport_type(options)
