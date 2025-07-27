@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry-schema'
-require_relative 'metadata'
+#require_relative 'metadata'
 
 # Extend Dry::Schema macros to support description
 module Dry
@@ -90,12 +90,10 @@ end
 module FastMcp
   # Main Tool class that represents an MCP Tool
   class Tool
-    include Metadata
 
     class InvalidArgumentsError < StandardError; end
 
     class << self
-      include Metadata
       attr_accessor :server
 
       # Add tagging support for tools
@@ -116,8 +114,7 @@ module FastMcp
           @metadata[key]
         else
           # Validate that the key doesn't use reserved prefixes
-          raise ReservedMetadataError, "Key '#{key}' uses reserved prefix" if reserved_key?(key)
-
+          #raise ReservedMetadataError, "Key '#{key}' uses reserved prefix" if reserved_key?(key)
           @metadata[key] = value
         end
       end
