@@ -162,10 +162,10 @@ module FastMcp
       #setup_streamable_rails_transport(app, options.merge(name: name, version: version, logger: logger), transport_type)
     #end
 
-    do_it(app, options)
+    do_it(app, options, block_given?)
   end
 
-  def self.do_it(app, options)
+  def self.do_it(app, options, block_g)
     name = options.delete(:name) || app.class.module_parent_name.underscore.dasherize
     version = options.delete(:version) || '1.0.0'
     logger = options[:logger] || Rails.logger
@@ -183,7 +183,7 @@ module FastMcp
     allowed_ips = options[:allowed_ips] || FastMcp::Transports::RackTransport::DEFAULT_ALLOWED_IPS
     # Create or get the server
     self.server = FastMcp::Server.new(name: name, version: version, logger: logger)
-    yield self.server if block_given?
+    yield self.server if block_g
 
     # Choose the right middleware based on authentication
     self.server.transport_klass = if authenticate
