@@ -452,8 +452,8 @@ module FastMcp
     # Send a JSON-RPC result response
     def send_result(result, id, metadata: {})
       # Validate and sanitize metadata
-      sanitized_metadata = format_meta_field(metadata)
-      result[:_meta] = sanitized_metadata if sanitized_metadata
+      #sanitized_metadata = format_meta_field(metadata)
+      #result[:_meta] = sanitized_metadata if sanitized_metadata
 
       response = {
         jsonrpc: '2.0',
