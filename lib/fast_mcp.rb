@@ -142,10 +142,12 @@ module FastMcp
   # @return [#call] The Rack middleware
   def self.mount_in_rails(app, options = {})
     # Default options
+    puts "OPTIONS: #{options}"
     name = options.delete(:name) || app.class.module_parent_name.underscore.dasherize
     version = options.delete(:version) || '1.0.0'
     logger = options[:logger] || Rails.logger
     transport_type = options.delete(:transport) || detect_transport_type(options)
+    puts "TRANSPORT TYPE: #{transport_type}"
 
     # Handle transport-specific options
     #if transport_type == :legacy
