@@ -269,8 +269,8 @@ module FastMcp
         result = case request.request_method
                  when 'OPTIONS'
                    handle_options_request
-                 when 'GET'
-                   handle_get_request(request, env)
+                 #when 'GET'
+                   #handle_get_request(request, env)
                  when 'POST'
                    handle_post_request(request, request_server)
                  else
