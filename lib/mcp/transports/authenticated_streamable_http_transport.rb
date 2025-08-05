@@ -16,6 +16,7 @@ module FastMcp
         @auth_header_name = options[:auth_header_name] || 'Authorization'
         @auth_exempt_paths = options[:auth_exempt_paths] || []
         @auth_enabled = !@auth_token.nil?
+        @custom_auth_method = options[:auth_validator] || nil
 
         @logger.debug("Authentication #{@auth_enabled ? 'enabled' : 'disabled'} for StreamableHTTP transport")
         @logger.debug("Auth exempt paths: #{@auth_exempt_paths}") if @auth_enabled && !@auth_exempt_paths.empty?
@@ -48,7 +49,12 @@ module FastMcp
       def authenticated?(request)
         auth_header = extract_auth_header(request)
         token = extract_token_from_header(auth_header)
-        valid_token?(token)
+        if @custom_auth_method
+          puts "WOOO HOOO"
+          @custom_auth_method.call
+        else
+          valid_token?(token)
+        end
       end
 
       # Extract authentication header from request
