@@ -299,7 +299,7 @@ module FastMcp
         end
 
         # Handle SSE stream
-        handle_sse_stream(request, env)
+        #handle_sse_stream(request, env)
       end
 
       # Handle POST requests (JSON-RPC messages)
