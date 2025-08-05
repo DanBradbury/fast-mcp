@@ -50,8 +50,8 @@ module FastMcp
         auth_header = extract_auth_header(request)
         token = extract_token_from_header(auth_header)
         if @custom_auth_method
-          puts "WOOO HOOO"
-          @custom_auth_method.call
+          puts "WOOO HOOO2"
+          @custom_auth_method.call(request)
         else
           valid_token?(token)
         end
