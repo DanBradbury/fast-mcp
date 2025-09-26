@@ -180,7 +180,7 @@ module FastMcp
     end
 
     # Create server
-    self.server = FastMcp::Server.new(name: options[:name], version: options[:version], logger: logger)
+    self.server = FastMcp::Server.new(name: name, version: version, logger: logger)
     yield self.server if block_given?
 
     # Insert middleware
@@ -220,7 +220,6 @@ module FastMcp
     options[:allowed_ips] = allowed_ips
     options[:allowed_origins] = allowed_origins
     options[:require_https] = Rails.env.production? if options[:require_https].nil?
-
   end
 
   def self.warn_rails_legacy_usage
